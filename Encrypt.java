@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 
+
 public class Encrypt {
     public static void main(String [] args) {
         Scanner scan = new Scanner(System.in);
@@ -16,15 +17,47 @@ public class Encrypt {
         kg.writeKeysToFile(arr);
         String s = kg.readKeysFromFile();
 
+        String [] keys = s.split(" ");
+
         System.out.println("Please enter your text: ");
         String inputBlock = scan.nextLine();
 
-        ArrayList<Character> unicodeArrayList;
+        ArrayList<Character> encryptedText = new ArrayList<>();
 
         for(int i = 0; i < inputBlock.length() - 1; i++) {
-           char c =  unicodeArrayList.add(unicodeArrayList.charAt(i));
+           char c =  inputBlock.charAt(i);
+           int asciiCode =  76;
+           System.out.println(c);
+           int result = kg.makeChange(asciiCode, Integer.parseInt(keys[0]), Integer.parseInt(keys[2]));
+           char resultedEncrypted = (char) result;
+           System.out.println(result);
+            
+           char newResult = (char) result;
+
+            encryptedText.add(newResult);
+
+           
+
+           
 
         }
+
+        
+
+        kg.writeEncryptedText(encryptedText);
+
+
+
+
+
+
+        
+
+
+
+
+
+
 
 
 

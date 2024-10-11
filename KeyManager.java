@@ -3,6 +3,7 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.ArrayList;
 public class KeyManager {
     private int n;
     private int s;
@@ -78,6 +79,31 @@ public class KeyManager {
           
         }
     }
+    public void writeEncryptedText(ArrayList <Character> text) {
+        FileWriter fw = null;
+        try {
+            File file = new File("encrypted.txt");
+             fw = new FileWriter(file);
+
+             for(Character c: text) {
+                fw.append(c);
+             }
+          
+        }
+        catch(IOException e) {
+            System.out.println("There was an error with writing the Encrypted text" + e);
+        }
+        finally {
+            try {
+                fw.close();
+            }
+            catch(IOException e) {
+                System.out.println("could not close filestream");
+            }
+           
+          
+        }
+    }
 
     public int[] generateKeyPairs(int p, int q) {
         int pqArr[] = null;
@@ -120,12 +146,12 @@ public class KeyManager {
                 for (int j = 0; j < count; j++) {
                     result *= base;
                     
-                    System.out.println("Base multiplied: " + result);
+                    
                 }
-                result = result % 11;
+                result = result % mod;
                
                 sum += powerOfTwo[i];
-                System.out.println("Updated sum: " + sum);
+                
             }
             
         }
