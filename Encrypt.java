@@ -5,53 +5,60 @@ import java.util.Scanner;
 
 public class Encrypt {
     public static void main(String [] args) {
-        Scanner scan = new Scanner(System.in);
+       final KeyManager kg = new KeyManager();
        final int p, q;
+       Scanner scan = new Scanner(System.in);
 
+        //take user input
         System.out.println("Please Enter Two Prime Numbers:");
+
+        //take two prime numbers
         p = 7;
         q = 13;
 
-        KeyManager kg = new KeyManager();
+        
+        //key generation
         int arr [] = kg.generateKeyPairs(p, q);
+
+        //writing keys to keys.txt file
         kg.writeKeysToFile(arr);
+
+        //getting the keys as a string from the file
         String s = kg.readKeysFromFile();
 
+
+        //key array with 29 5 91 
         String [] keys = s.split(" ");
 
+        //asserts make change 
+        makeChangeTest(kg, 2, 29, 5, 91);
+        makeChangeTest(kg, 115, 29, 5, 91);
+        
+
+       
+
+        
+        //gets input block from user
         System.out.println("Please enter your text: ");
         String inputBlock = scan.nextLine();
 
-        ArrayList<Character> encryptedText = new ArrayList<>();
 
-        for(int i = 0; i < inputBlock.length() - 1; i++) {
-           char c =  inputBlock.charAt(i);
-           int asciiCode =  76;
-           System.out.println(c);
-           int result = kg.makeChange(asciiCode, Integer.parseInt(keys[0]), Integer.parseInt(keys[2]));
-           char resultedEncrypted = (char) result;
-           System.out.println(result);
+        ArrayList<Character> encryptText = new ArrayList<>();
+
+        for(int i = 0; i < inputBlock.length(); i++) {
+            int character = (int) inputBlock.charAt(i);
+            System.out.println("character: " + character);
+            char result = (char) kg.makeChange(character, Integer.parseInt(keys[0]),Integer.parseInt(keys[2]) );
             
-           char newResult = (char) result;
-
-            encryptedText.add(newResult);
-
-           
-
-           
+            
+            encryptText.add(result);
 
         }
 
-        
-
-        kg.writeEncryptedText(encryptedText);
-
-
-
-
-
-
-        
+ 
+        for(Character cha: encryptText) {
+            System.out.println(cha);
+        }
 
 
 
@@ -60,49 +67,40 @@ public class Encrypt {
 
 
 
-
-
-
-
-
-
-
-
-
-      
-      
-
-      
-        
-       
-        int finalInt = kg.makeChange(6, 8, 11) ;
-        int testInt = (int)( Math.pow(6, 2) * Math.pow(6, 2) * Math.pow(6, 2) * Math.pow(6, 2)) % 11;
-        System.out.println(finalInt);
-        System.out.println(testInt);
-        
-
-        
-       
 
         
 
 
 
+        
+
+        
+
+        
+
+
+     
+
+        
 
        
-
-
-
-
-
-
-        
-
-
-
-
 
         scan.close();
+
+    }
+
+
+    public static void makeChangeTest(KeyManager kg, int base, int exponent, int exponent2, int mod) {
+        int result = kg.makeChange(base, exponent, mod);
+        int newResult = kg.makeChange(result, exponent2, mod);
+
+        if(newResult != base) {
+            System.out.println("result does not equal newResult: " + "( Recieved:" + newResult + "," +  "Expected: " + base + ")");
+            return;
+        }
+        else {
+            System.out.println("make change test passed with value: " + newResult);
+        }
 
     }
 

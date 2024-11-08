@@ -1,12 +1,10 @@
-import java.io.IOException;
-import java.util.Scanner;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
+
 public class KeyManager {
-    private int n;
-    private int s;
     private int[] listPrimes;
 
     public KeyManager() {
@@ -23,85 +21,49 @@ public class KeyManager {
                 919, 929, 937, 941, 947, 953, 967, 971, 977, 983, 991, 997 };
     }
 
- 
     public boolean verifyPrime(int p, int q) {
         return false;
     }
 
     public String readKeysFromFile() {
-       String s = null;
+        String s = null;
 
         try {
             File file = new File("keys.txt");
             Scanner scan = new Scanner(file);
             scan.useDelimiter(" ");
-            
 
-            while(scan.hasNextLine()) {
+            while (scan.hasNextLine()) {
                 s = scan.nextLine();
-                
+
             }
 
-
-            
-
-
-        }
-        catch(IOException e) {
+        } catch (IOException e) {
             System.out.println(e);
         }
         return s;
     }
 
-    public void writeKeysToFile(int [] keyPairs) {
+    public void writeKeysToFile(int[] keyPairs) {
         FileWriter fw = null;
         try {
             File file = new File("keys.txt");
-             fw = new FileWriter(file);
+            fw = new FileWriter(file);
 
-            for(int key: keyPairs) {
+            for (int key : keyPairs) {
                 fw.write(Integer.toString(key));
                 fw.write(" ");
-            } 
-          
-        }
-        catch(IOException e) {
-            System.out.println("There was an error" + e);
-        }
-        finally {
-            try {
-                fw.close();
             }
-            catch(IOException e) {
-                System.out.println("could not close filestream");
-            }
-           
-          
-        }
-    }
-    public void writeEncryptedText(ArrayList <Character> text) {
-        FileWriter fw = null;
-        try {
-            File file = new File("encrypted.txt");
-             fw = new FileWriter(file);
 
-             for(Character c: text) {
-                fw.append(c);
-             }
-          
-        }
-        catch(IOException e) {
-            System.out.println("There was an error with writing the Encrypted text" + e);
-        }
-        finally {
+        } catch (IOException e) {
+            System.out.println("There was an error" + e);
+        } finally {
             try {
                 fw.close();
-            }
-            catch(IOException e) {
+            } catch (IOException e) {
                 System.out.println("could not close filestream");
             }
-           
-          
+
         }
     }
 
@@ -112,15 +74,20 @@ public class KeyManager {
         for (int k = 1; k < 50; k++) {
             int S = k * totient;
             int Splus1 = S + 1;
-
+            int numberOfTries = 0;
             for (int prime : this.listPrimes) {
                 int factorMod = Splus1 % prime;
                 int factor = Splus1 / prime;
-                if (prime != 1 && factor != 1 && factorMod == 0 && factor != p && factor != q && prime != p && prime != q) {
+                if (prime != 1 && factor != 1 && factorMod == 0 && factor != p && factor != q && prime != p
+                        && prime != q && numberOfTries > 1) {
 
+                    
                     pqArr = new int[] { factor, prime, r };
                     break;
 
+                }
+                else {
+                    numberOfTries++;
                 }
                 if (pqArr != null) {
                     break;
@@ -132,36 +99,44 @@ public class KeyManager {
     }
 
     public int makeChange(int base, int exponent, int mod) {
-        int [] powerOfTwo = {1,2,4,8,16,32,64,128, 256, 512, 1024, 2048,4096, 8192, 16384, 32768, 65536};
+        int[] powerOfTwo = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536};
+        ArrayList<Integer> list = new ArrayList<>();
         int sum = 0;
         int result = 1;
-
-
-        for(int i = powerOfTwo.length - 1;i >= 0 && sum < exponent; i--) {
-          
+    
+        // Step 1: Decompose exponent into powers of two
+        for (int i = powerOfTwo.length - 1; i >= 0; i--) {
             if (sum + powerOfTwo[i] <= exponent) {
-                int count = powerOfTwo[i];  
-                
-                
-                for (int j = 0; j < count; j++) {
-                    result *= base;
-                    
-                    
-                }
-                result = result % mod;
-               
                 sum += powerOfTwo[i];
-                
+                list.add(powerOfTwo[i]);  // Add each power of two needed to reach the exponent
+            }
+        }
+    
+        // Array to store each calculated power of base corresponding to powers in `list`
+        ArrayList<Integer> newList = new ArrayList<>();
+        
+        // Step 2: Calculate base^power % mod for each power in list and store in newList
+        for (Integer powOfTwo : list) {
+            int product = base; //115
+            
+           
+            for (int i = 1; i < powOfTwo; i *= 2) {
+                product = (product * product) % mod;
             }
             
+            newList.add(product);  // Store the calculated power
         }
-
+    
+        for (Integer value : newList) {
+            result = (result * value) % mod;
+        }
+    
+        for (int i = 0; i < newList.size(); i++) {
+            System.out.println("Power of base for 2^" + list.get(i) + ": " + newList.get(i));
+        }
+    
         return result;
-
-       
     }
-
     
 
-
- }
+}
