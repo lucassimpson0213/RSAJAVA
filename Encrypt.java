@@ -13,8 +13,8 @@ public class Encrypt {
         System.out.println("Please Enter Two Prime Numbers:");
 
         //take two prime numbers
-        p = 7;
-        q = 13;
+        p = 61;
+        q = 53;
 
         
         //key generation
@@ -31,8 +31,8 @@ public class Encrypt {
         String [] keys = s.split(" ");
 
         //asserts make change 
-        makeChangeTest(kg, 2, 29, 5, 91);
-        makeChangeTest(kg, 115, 29, 5, 91);
+        makeChangeTest(kg, 2, Integer.parseInt(keys[0]), Integer.parseInt(keys[1]), Integer.parseInt(keys[2]));
+        makeChangeTest(kg, 115, Integer.parseInt(keys[0]), Integer.parseInt(keys[1]), Integer.parseInt(keys[2]));
         
 
        
@@ -59,30 +59,6 @@ public class Encrypt {
         for(Character cha: encryptText) {
             System.out.println(cha);
         }
-
-
-
-
-
-
-
-
-
-        
-
-
-
-        
-
-        
-
-        
-
-
-     
-
-        
-
        
 
         scan.close();
@@ -93,6 +69,7 @@ public class Encrypt {
     public static void makeChangeTest(KeyManager kg, int base, int exponent, int exponent2, int mod) {
         int result = kg.makeChange(base, exponent, mod);
         int newResult = kg.makeChange(result, exponent2, mod);
+        System.out.println(newResult);
 
         if(newResult != base) {
             System.out.println("result does not equal newResult: " + "( Recieved:" + newResult + "," +  "Expected: " + base + ")");
